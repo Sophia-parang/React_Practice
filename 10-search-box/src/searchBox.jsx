@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import "/emoji.png";
 import data from "./data";
 import Header from "./components/Header";
-import SearchInput from "./components/searchInput";
+import SearchInput from "./components/SearchInput";
 import ResultList from "./components/ResultList";
 
 function SearchBox() {
