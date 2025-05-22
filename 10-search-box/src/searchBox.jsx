@@ -2,6 +2,9 @@ import "./searchBox.css";
 import { useState, useEffect } from "react";
 import "/emoji.png";
 import data from "./data";
+import Header from "./components/Header";
+import SearchInput from "./components/searchInput";
+import ResultList from "./components/ResultList";
 
 function SearchBox() {
   const [query, setQuery] = useState("");
@@ -66,81 +69,22 @@ function SearchBox() {
 
   return (
     <main className="flex flex-col items-center h-screen mt-80">
-      <section className="flex items-center mb-8">
-        <h1
-          className="text-center text-yellow-500 text-8xl"
-          style={{ fontFamily: '"Barriecito", cursive' }}
-        >
-          Search for Dummies
-        </h1>
-        <img className="size-20 ml-3 animate-bounce" src="/emoji.png" />
-      </section>
-      <section className="flex">
-        <input
-          className="mr-3 w-96 border border-gray-400 rounded-lg focus:outline-offset-1 focus:outline-yellow-500 p-1 pl-3"
-          type="text"
-          placeholder="enter your query..."
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setHasSelected(false);
-          }}
-          onKeyDown={handleKeyDown}
-        />
-        <button
-          className={`w-13 h-8 rounded-lg ${
-            isSearchReady
-              ? "bg-yellow-400 hover:bg-yellow-500  cursor-pointer"
-              : "bg-gray-300 cursor-not-allowed"
-          }`}
-          onClick={handleSearch}
-          disabled={!isSearchReady}
-        >
-          🔍
-        </button>
-      </section>
-      <ul
-        className={`w-96 mr-16 max-h-60 overflow-y-auto ${
-          result.length > 0 ? "border border-gray-300 rounded-lg" : ""
-        }`}
-      >
-        {result.map((item, index) => (
-          <li
-            className={`px-3 py-1 flex justify-between hover:bg-amber-100 ${
-              selectedIndex === index ? "bg-amber-100" : ""
-            }`}
-            key={item.key}
-            onClick={() => handleListClick(item)}
-          >
-            <span
-              dangerouslySetInnerHTML={{
-                __html: item.description.replace(
-                  new RegExp(`(${debouncedQuery})`, "gi"),
-                  (match) => `<strong>${match}</strong>`
-                ),
-              }}
-            />
-            <span
-              className={`border-none px-1 rounded-lg text-sm ${
-                item.type === "PEOPLE"
-                  ? "bg-violet-100"
-                  : item.type === "COMPANY"
-                  ? "bg-sky-100"
-                  : item.type === "COUNTRY"
-                  ? "bg-fuchsia-100"
-                  : item.type === "JOB"
-                  ? "bg-rose-100"
-                  : "bg-gray-200"
-              }`}
-            >
-              {item.type}
-            </span>
-          </li>
-        ))}
-      </ul>
-      {result.length === 0 && debouncedQuery.length > 1 && !hasSelected && (
-        <p className="mt-3 mr-5 text-gray-400">검색 결과가 없습니다.</p>
-      )}
+      <Header />
+      <SearchInput
+        query={query}
+        setQuery={setQuery}
+        setHasSelected={setHasSelected}
+        handleKeyDown={handleKeyDown}
+        isSearchReady={isSearchReady}
+        handleSearch={handleSearch}
+      />
+      <ResultList
+        result={result}
+        selectedIndex={selectedIndex}
+        handleListClick={handleListClick}
+        debouncedQuery={debouncedQuery}
+        hasSelected={hasSelected}
+      />
     </main>
   );
 }
